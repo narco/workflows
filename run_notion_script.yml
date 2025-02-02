@@ -1,0 +1,27 @@
+name: Automatiser Notion
+
+on:
+  schedule:
+    - cron: "0 8 * * *"  # Exécute tous les jours à 08h00 UTC
+  workflow_dispatch:  # Permet de lancer manuellement
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cloner le dépôt
+        uses: actions/checkout@v3
+
+      - name: Installer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Exécuter le script
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python notion_script.py
